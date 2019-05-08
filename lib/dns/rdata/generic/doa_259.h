@@ -9,10 +9,10 @@
  * information regarding copyright ownership.
  */
 
-#ifndef GENERIC_DOA_259_H
-#define GENERIC_DOA_259_H 1
+#ifndef GENERIC_OX_259_H
+#define GENERIC_OX_259_H 1
 
-typedef struct dns_rdata_doa {
+typedef struct dns_rdata_ox {
 	dns_rdatacommon_t	common;
 	isc_mem_t *		mctx;
 	unsigned char *		mediatype;
@@ -22,6 +22,6 @@ typedef struct dns_rdata_doa {
 	uint16_t		data_len;
 	uint8_t		location;
 	uint8_t		mediatype_len;
-} dns_rdata_doa_t;
+} dns_rdata_ox_t;
 
-#endif /* GENERIC_DOA_259_H */
+#endif /* GENERIC_OX_259_H */
