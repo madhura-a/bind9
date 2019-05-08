@@ -9,16 +9,16 @@
  * information regarding copyright ownership.
  */
 
-#ifndef RDATA_GENERIC_DOA_259_C
-#define RDATA_GENERIC_DOA_259_C
+#ifndef RDATA_GENERIC_OX_259_C
+#define RDATA_GENERIC_OX_259_C
 
-#define RRTYPE_DOA_ATTRIBUTES (0)
+#define RRTYPE_OX_ATTRIBUTES (0)
 
 static inline isc_result_t
-fromtext_doa(ARGS_FROMTEXT) {
+fromtext_ox(ARGS_FROMTEXT) {
 	isc_token_t token;
 
-	REQUIRE(type == dns_rdatatype_doa);
+	REQUIRE(type == dns_rdatatype_ox);
 
 	UNUSED(rdclass);
 	UNUSED(origin);
@@ -26,21 +26,21 @@ fromtext_doa(ARGS_FROMTEXT) {
 	UNUSED(callbacks);
 
 	/*
-	 * DOA-ENTERPRISE
+	 * OX-ENTERPRISE
 	 */
 	RETERR(isc_lex_getmastertoken(lexer, &token, isc_tokentype_number,
 				      false));
 	RETERR(uint32_tobuffer(token.value.as_ulong, target));
 
 	/*
-	 * DOA-TYPE
+	 * OX-TYPE
 	 */
 	RETERR(isc_lex_getmastertoken(lexer, &token, isc_tokentype_number,
 				      false));
 	RETERR(uint32_tobuffer(token.value.as_ulong, target));
 
 	/*
-	 * DOA-LOCATION
+	 * OX-LOCATION
 	 */
 	RETERR(isc_lex_getmastertoken(lexer, &token, isc_tokentype_number,
 				      false));
@@ -50,14 +50,14 @@ fromtext_doa(ARGS_FROMTEXT) {
 	RETERR(uint8_tobuffer(token.value.as_ulong, target));
 
 	/*
-	 * DOA-MEDIA-TYPE
+	 * OX-MEDIA-TYPE
 	 */
 	RETERR(isc_lex_getmastertoken(lexer, &token, isc_tokentype_qstring,
 				      false));
 	RETTOK(txt_fromtext(&token.value.as_textregion, target));
 
 	/*
-	 * DOA-DATA
+	 * OX-DATA
 	 */
 	RETERR(isc_lex_getmastertoken(lexer, &token, isc_tokentype_string,
 				      false));
@@ -70,13 +70,13 @@ fromtext_doa(ARGS_FROMTEXT) {
 }
 
 static inline isc_result_t
-totext_doa(ARGS_TOTEXT) {
+totext_ox(ARGS_TOTEXT) {
 	char buf[sizeof("4294967295 ")];
 	isc_region_t region;
 	uint32_t n;
 
 	REQUIRE(rdata != NULL);
-	REQUIRE(rdata->type == dns_rdatatype_doa);
+	REQUIRE(rdata->type == dns_rdatatype_ox);
 	REQUIRE(rdata->length != 0);
 
 	UNUSED(tctx);
@@ -84,7 +84,7 @@ totext_doa(ARGS_TOTEXT) {
 	dns_rdata_toregion(rdata, &region);
 
 	/*
-	 * DOA-ENTERPRISE
+	 * OX-ENTERPRISE
 	 */
 	n = uint32_fromregion(&region);
 	isc_region_consume(&region, 4);
@@ -92,7 +92,7 @@ totext_doa(ARGS_TOTEXT) {
 	RETERR(str_totext(buf, target));
 
 	/*
-	 * DOA-TYPE
+	 * OX-TYPE
 	 */
 	n = uint32_fromregion(&region);
 	isc_region_consume(&region, 4);
@@ -100,7 +100,7 @@ totext_doa(ARGS_TOTEXT) {
 	RETERR(str_totext(buf, target));
 
 	/*
-	 * DOA-LOCATION
+	 * OX-LOCATION
 	 */
 	n = uint8_fromregion(&region);
 	isc_region_consume(&region, 1);
@@ -108,13 +108,13 @@ totext_doa(ARGS_TOTEXT) {
 	RETERR(str_totext(buf, target));
 
 	/*
-	 * DOA-MEDIA-TYPE
+	 * OX-MEDIA-TYPE
 	 */
 	RETERR(txt_totext(&region, true, target));
 	RETERR(str_totext(" ", target));
 
 	/*
-	 * DOA-DATA
+	 * OX-DATA
 	 */
 	if (region.length == 0) {
 		return (str_totext("-", target));
@@ -124,19 +124,19 @@ totext_doa(ARGS_TOTEXT) {
 }
 
 static inline isc_result_t
-fromwire_doa(ARGS_FROMWIRE) {
+fromwire_ox(ARGS_FROMWIRE) {
 	isc_region_t region;
 
 	UNUSED(rdclass);
 	UNUSED(dctx);
 	UNUSED(options);
 
-	REQUIRE(type == dns_rdatatype_doa);
+	REQUIRE(type == dns_rdatatype_ox);
 
 	isc_buffer_activeregion(source, &region);
 	/*
-	 * DOA-MEDIA-TYPE may be an empty <character-string> (i.e.,
-	 * comprising of just the length octet) and DOA-DATA can have
+	 * OX-MEDIA-TYPE may be an empty <character-string> (i.e.,
+	 * comprising of just the length octet) and OX-DATA can have
 	 * zero length.
 	 */
 	if (region.length < 4 + 4 + 1 + 1) {
@@ -144,7 +144,7 @@ fromwire_doa(ARGS_FROMWIRE) {
 	}
 
 	/*
-	 * Check whether DOA-MEDIA-TYPE length is not malformed.
+	 * Check whether OX-MEDIA-TYPE length is not malformed.
 	 */
 	if (region.base[9] > region.length - 10) {
 		return (ISC_R_UNEXPECTEDEND);
@@ -155,13 +155,13 @@ fromwire_doa(ARGS_FROMWIRE) {
 }
 
 static inline isc_result_t
-towire_doa(ARGS_TOWIRE) {
+towire_ox(ARGS_TOWIRE) {
 	isc_region_t region;
 
 	UNUSED(cctx);
 
 	REQUIRE(rdata != NULL);
-	REQUIRE(rdata->type == dns_rdatatype_doa);
+	REQUIRE(rdata->type == dns_rdatatype_ox);
 	REQUIRE(rdata->length != 0);
 
 	dns_rdata_toregion(rdata, &region);
@@ -169,14 +169,14 @@ towire_doa(ARGS_TOWIRE) {
 }
 
 static inline int
-compare_doa(ARGS_COMPARE) {
+compare_ox(ARGS_COMPARE) {
 	isc_region_t r1;
 	isc_region_t r2;
 
 	REQUIRE(rdata1 != NULL);
 	REQUIRE(rdata2 != NULL);
 	REQUIRE(rdata1->type == rdata2->type);
-	REQUIRE(rdata1->type == dns_rdatatype_doa);
+	REQUIRE(rdata1->type == dns_rdatatype_ox);
 	REQUIRE(rdata1->rdclass == rdata2->rdclass);
 	REQUIRE(rdata1->length != 0);
 	REQUIRE(rdata2->length != 0);
@@ -188,139 +188,139 @@ compare_doa(ARGS_COMPARE) {
 
 static inline isc_result_t
 fromstruct_doa(ARGS_FROMSTRUCT) {
-	dns_rdata_doa_t *doa = source;
+	dns_rdata_ox_t *ox = source;
 
-	REQUIRE(type == dns_rdatatype_doa);
+	REQUIRE(type == dns_rdatatype_ox);
 	REQUIRE(source != NULL);
-	REQUIRE(doa->common.rdtype == dns_rdatatype_doa);
-	REQUIRE(doa->common.rdclass == rdclass);
+	REQUIRE(ox->common.rdtype == dns_rdatatype_ox);
+	REQUIRE(ox->common.rdclass == rdclass);
 
-	RETERR(uint32_tobuffer(doa->enterprise, target));
-	RETERR(uint32_tobuffer(doa->type, target));
-	RETERR(uint8_tobuffer(doa->location, target));
-	RETERR(uint8_tobuffer(doa->mediatype_len, target));
-	RETERR(mem_tobuffer(target, doa->mediatype, doa->mediatype_len));
-	return (mem_tobuffer(target, doa->data, doa->data_len));
+	RETERR(uint32_tobuffer(ox->enterprise, target));
+	RETERR(uint32_tobuffer(ox->type, target));
+	RETERR(uint8_tobuffer(ox->location, target));
+	RETERR(uint8_tobuffer(ox->mediatype_len, target));
+	RETERR(mem_tobuffer(target, ox->mediatype, ox->mediatype_len));
+	return (mem_tobuffer(target, ox->data, ox->data_len));
 }
 
 static inline isc_result_t
-tostruct_doa(ARGS_TOSTRUCT) {
-	dns_rdata_doa_t *doa = target;
+tostruct_ox(ARGS_TOSTRUCT) {
+	dns_rdata_ox_t *ox = target;
 	isc_region_t region;
 
 	REQUIRE(rdata != NULL);
-	REQUIRE(rdata->type == dns_rdatatype_doa);
+	REQUIRE(rdata->type == dns_rdatatype_ox);
 	REQUIRE(rdata->length != 0);
 
-	doa->common.rdclass = rdata->rdclass;
-	doa->common.rdtype = rdata->type;
-	ISC_LINK_INIT(&doa->common, link);
+	ox->common.rdclass = rdata->rdclass;
+	ox->common.rdtype = rdata->type;
+	ISC_LINK_INIT(&ox->common, link);
 
 	dns_rdata_toregion(rdata, &region);
 
 	/*
-	 * DOA-ENTERPRISE
+	 * OX-ENTERPRISE
 	 */
 	if (region.length < 4) {
 		return (ISC_R_UNEXPECTEDEND);
 	}
-	doa->enterprise = uint32_fromregion(&region);
+	ox->enterprise = uint32_fromregion(&region);
 	isc_region_consume(&region, 4);
 
 	/*
-	 * DOA-TYPE
+	 * OX-TYPE
 	 */
 	if (region.length < 4) {
 		return (ISC_R_UNEXPECTEDEND);
 	}
-	doa->type = uint32_fromregion(&region);
+	ox->type = uint32_fromregion(&region);
 	isc_region_consume(&region, 4);
 
 	/*
-	 * DOA-LOCATION
+	 * OX-LOCATION
 	 */
 	if (region.length < 1) {
 		return (ISC_R_UNEXPECTEDEND);
 	}
-	doa->location = uint8_fromregion(&region);
+	ox->location = uint8_fromregion(&region);
 	isc_region_consume(&region, 1);
 
 	/*
-	 * DOA-MEDIA-TYPE
+	 * OX-MEDIA-TYPE
 	 */
 	if (region.length < 1) {
 		return (ISC_R_UNEXPECTEDEND);
 	}
-	doa->mediatype_len = uint8_fromregion(&region);
+	ox->mediatype_len = uint8_fromregion(&region);
 	isc_region_consume(&region, 1);
-	INSIST(doa->mediatype_len <= region.length);
-	doa->mediatype = mem_maybedup(mctx, region.base, doa->mediatype_len);
-	if (doa->mediatype == NULL) {
+	INSIST(ox->mediatype_len <= region.length);
+	ox->mediatype = mem_maybedup(mctx, region.base, ox->mediatype_len);
+	if (ox->mediatype == NULL) {
 		goto cleanup;
 	}
-	isc_region_consume(&region, doa->mediatype_len);
+	isc_region_consume(&region, ox->mediatype_len);
 
 	/*
-	 * DOA-DATA
+	 * OX-DATA
 	 */
-	doa->data_len = region.length;
-	doa->data = NULL;
-	if (doa->data_len > 0) {
-		doa->data = mem_maybedup(mctx, region.base, doa->data_len);
-		if (doa->data == NULL) {
+	ox->data_len = region.length;
+	ox->data = NULL;
+	if (ox->data_len > 0) {
+		ox->data = mem_maybedup(mctx, region.base, ox->data_len);
+		if (ox->data == NULL) {
 			goto cleanup;
 		}
-		isc_region_consume(&region, doa->data_len);
+		isc_region_consume(&region, ox->data_len);
 	}
 
-	doa->mctx = mctx;
+	ox->mctx = mctx;
 
 	return (ISC_R_SUCCESS);
 
 cleanup:
-	if (mctx != NULL && doa->mediatype != NULL) {
-		isc_mem_free(mctx, doa->mediatype);
+	if (mctx != NULL && ox->mediatype != NULL) {
+		isc_mem_free(mctx, ox->mediatype);
 	}
 	return (ISC_R_NOMEMORY);
 }
 
 static inline void
-freestruct_doa(ARGS_FREESTRUCT) {
-	dns_rdata_doa_t *doa = source;
+freestruct_ox(ARGS_FREESTRUCT) {
+	dns_rdata_doa_t *ox = source;
 
 	REQUIRE(source != NULL);
-	REQUIRE(doa->common.rdtype == dns_rdatatype_doa);
+	REQUIRE(ox->common.rdtype == dns_rdatatype_ox);
 
-	if (doa->mctx == NULL) {
+	if (ox->mctx == NULL) {
 		return;
 	}
 
-	if (doa->mediatype != NULL) {
-		isc_mem_free(doa->mctx, doa->mediatype);
+	if (ox->mediatype != NULL) {
+		isc_mem_free(ox->mctx, ox->mediatype);
 	}
-	if (doa->data != NULL) {
-		isc_mem_free(doa->mctx, doa->data);
+	if (ox->data != NULL) {
+		isc_mem_free(ox->mctx, ox->data);
 	}
 
-	doa->mctx = NULL;
+	ox->mctx = NULL;
 }
 
 static inline isc_result_t
-additionaldata_doa(ARGS_ADDLDATA) {
+additionaldata_ox(ARGS_ADDLDATA) {
 	UNUSED(rdata);
 	UNUSED(add);
 	UNUSED(arg);
 
-	REQUIRE(rdata->type == dns_rdatatype_doa);
+	REQUIRE(rdata->type == dns_rdatatype_ox);
 
 	return (ISC_R_SUCCESS);
 }
 
 static inline isc_result_t
-digest_doa(ARGS_DIGEST) {
+digest_ox(ARGS_DIGEST) {
 	isc_region_t r;
 
-	REQUIRE(rdata->type == dns_rdatatype_doa);
+	REQUIRE(rdata->type == dns_rdatatype_ox);
 
 	dns_rdata_toregion(rdata, &r);
 
@@ -328,30 +328,30 @@ digest_doa(ARGS_DIGEST) {
 }
 
 static inline bool
-checkowner_doa(ARGS_CHECKOWNER) {
+checkowner_ox(ARGS_CHECKOWNER) {
 	UNUSED(name);
 	UNUSED(type);
 	UNUSED(rdclass);
 	UNUSED(wildcard);
 
-	REQUIRE(type == dns_rdatatype_doa);
+	REQUIRE(type == dns_rdatatype_ox);
 
 	return (true);
 }
 
 static inline bool
-checknames_doa(ARGS_CHECKNAMES) {
+checknames_ox(ARGS_CHECKNAMES) {
 	UNUSED(rdata);
 	UNUSED(owner);
 	UNUSED(bad);
 
-	REQUIRE(rdata->type == dns_rdatatype_doa);
+	REQUIRE(rdata->type == dns_rdatatype_ox);
 
 	return (true);
 }
 
 static inline int
-casecompare_doa(ARGS_COMPARE) {
+casecompare_ox(ARGS_COMPARE) {
 	return (compare_doa(rdata1, rdata2));
 }
 
